@@ -1,0 +1,125 @@
+﻿@model List<BudgetManager.Web.Services.AI.ChatMessage>
+
+@{
+    ViewData["Title"] = "BudgetManager AI";
+    var messages = Model ?? new List<BudgetManager.Web.Services.AI.ChatMessage>();
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>BudgetManager AI</h2>
+            <p class="text-muted">
+                Your AI-powered budgeting assistant
+            </p>
+        </div>
+
+        <form asp-action="Clear" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    class="btn btn-outline-secondary">
+                New Conversation
+            </button>
+        </form>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body"
+             id="chatHistory"
+             style="min-height:300px; max-height:500px; overflow-y:auto;">
+
+            @if (!(Model?.Any() ?? false))
+            {
+                <p class="text-muted">
+                    Start a conversation with BudgetManager AI.
+                </p>
+            }
+
+            @foreach (var message in Model ?? Enumerable.Empty<BudgetManager.Web.Services.AI.ChatMessage>())
+            {
+                bool isUser = message.Role == "user";
+
+                <div class="d-flex mb-3 @(isUser ? "justify-content-end" : "justify-content-start")">
+                    <div class="p-3 rounded @(isUser ? "bg-primary text-white" : "bg-light text-dark")"
+                         style="max-width:80%; white-space:pre-wrap; overflow-wrap:anywhere;">
+                        <strong>@(isUser ? "You" : "Budget Manager AI")</strong>
+                        <div>@message.Text</div>
+                    </div>
+                </div>
+            }
+
+            <div id="loadingIndicator"
+                 class="text-muted d-none"
+                 role="status"
+                 aria-live="polite">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Gemini is thinking...
+            </div>
+
+        </div>
+    </div>
+
+    <div asp-validation-summary="All"
+         class="text-danger"></div>
+
+    <form asp-action="Index"
+          method="post"
+          id="chatForm">
+
+        @Html.AntiForgeryToken()
+
+        <div class="input-group">
+            <input type="text"
+                   id="prompt"
+                   name="prompt"
+                   class="form-control"
+                   maxlength="2000"
+                   placeholder="Ask about your budget..."
+                   autocomplete="off"
+                   required />
+
+            <button type="submit"
+                    id="sendButton"
+                    class="btn btn-primary">
+                <span id="sendText">Send</span>
+                <span id="sendSpinner"
+                      class="spinner-border spinner-border-sm d-none"
+                      aria-hidden="true"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("chatForm");
+            const button = document.getElementById("sendButton");
+            const sendText = document.getElementById("sendText");
+            const spinner = document.getElementById("sendSpinner");
+            const loading = document.getElementById("loadingIndicator");
+            const history = document.getElementById("chatHistory");
+
+            history.scrollTop = history.scrollHeight;
+
+            form.addEventListener("submit", function (event) {
+                if (button.disabled) {
+                    event.preventDefault();
+                    return;
+                }
+
+                if (!form.checkValidity()) {
+                    return;
+                }
+
+                button.disabled = true;
+                sendText.textContent = "Thinking...";
+                spinner.classList.remove("d-none");
+                loading.classList.remove("d-none");
+
+                history.scrollTop = history.scrollHeight;
+            });
+        });
+    </script>
+}

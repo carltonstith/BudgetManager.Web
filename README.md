@@ -1,10 +1,8 @@
-# BudgetManager.Web
-
-# BudgetManager
+# Budget Manager
 
 A personal finance management web application built with **ASP.NET Core MVC, .NET 10, Entity Framework Core, and SQL Server**.
 
-BudgetManager is designed to help users manage recurring monthly bills, track payments, monitor vehicle charging expenses, and eventually interact with their financial data through an AI-powered assistant.
+Budget Manager is designed to help users manage recurring monthly bills, track payments, monitor vehicle charging expenses, and eventually interact with their financial data through an AI-powered assistant.
 
 ## Project Status
 
@@ -23,7 +21,10 @@ The next phase focuses on implementing the application services, user interfaces
 - **Authentication:** ASP.NET Core Identity
 - **Frontend:** Razor Views, HTML, CSS, JavaScript
 - **Development Environment:** Visual Studio
-- **AI Integration (Planned):** OpenAI API
+- **AI Integration (Planned):** Google Gemini API
+- **SDK:** Google Gemini SDK for .NET
+- **Configuration:** Gemini API key stored using .NET User Secrets
+- **Development goal:** AI-powered financial assistant using Gemini's free tier when available
 
 ## Features
 
